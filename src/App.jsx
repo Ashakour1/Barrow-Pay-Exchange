@@ -1,13 +1,55 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.css";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
 import Login from "./components/LoginForm";
+import Profile from "./pages/Dashboard/Profile";
+import TransactionList from "./pages/Dashboard/TransactionList";
+import Dashboard from "./pages/Dashboard/Dashboard";
 
 function App() {
-  const [count, setCount] = useState(0);
-
-  return <Login />;
+  return (
+    <Router>
+      <Routes>
+        <Route
+          path="/login"
+          element={
+            <div>
+              <Login />
+            </div>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <div>
+              <Header />
+              <Profile />
+              <Footer />
+            </div>
+          }
+        />{" "}
+        <Route
+          path="/transactions"
+          element={
+            <div>
+              <TransactionList />
+            </div>
+          }
+        />
+        <Route
+          path="/"
+          element={
+            <div>
+              <Header />
+              <Dashboard />
+              <Footer />
+            </div>
+          }
+        />
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;
