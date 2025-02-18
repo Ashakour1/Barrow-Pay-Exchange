@@ -27,3 +27,7 @@ export const transactions = [
     color: "text-primary-600",
   },
 ];
+
+
+// customized select add image
+// snapshot opacity
