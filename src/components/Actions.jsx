@@ -23,18 +23,24 @@ const Actions = () => {
   const [activeAction, setActiveAction] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState("");
   const [showInstructions, setShowInstructions] = useState(false);
-  const [copySuccess, setCopySuccess] = useState(false); // State for copy success message
+  const [copySuccess, setCopySuccess] = useState(false);
 
   const [depositData, setDepositData] = useState({
-    depositAmount: "",
-    phoneNumber: "",
-    depositMethod: "",
+    wallet_name: "evcplus" || "card" || "crypto",
+    amount: "",
   });
 
   const handlePaymentMethodChange = (event) => {
     const selectedMethod = event.target.value;
     setPaymentMethod(selectedMethod);
-    setShowInstructions(true); // Show instructions when a payment method is selected
+    setShowInstructions(true);
+
+    setDepositData((prevData) => ({
+      ...prevData,
+      wallet_name: selectedMethod,
+    }));
+
+    console.log(selectedMethod);
   };
 
   const handleInputChange = (e) => {
@@ -45,22 +51,130 @@ const Actions = () => {
     }));
   };
 
-  function handleCopy(text, e) {
-    // e.preventDefault();
+  const handleCopy = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
+    });
+  };
 
+  const handleDeposit = async (e) => {
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    const access = userData.access_token;
 
-    console.log(text);
-    // navigator.clipboard.writeText(text).then(() => {
-    //   setCopySuccess(true);
-    //   setTimeout(() => setCopySuccess(false), 2000);
-    // });
-  }
+    console.log(depositData);
 
-  const HandlePay = (e) => {
     e.preventDefault();
+    try {
+      const response = await fetch("/api/deposit/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access}`,
+        },
+        body: JSON.stringify(depositData),
+      });
 
-    if (depositData.phoneNumber) {
-      window.location.href = `tel:*712*${depositData.phoneNumber}*${depositData.depositAmount}#`;
+      console.log(response);
+      const result = await response.json();
+      console.log(result);
+
+      // Display success message
+      const successMessage = document.createElement("p");
+      successMessage.textContent = "Deposit successfully";
+      successMessage.className = "text-green-600 font-semibold mt-4";
+      e.target.appendChild(successMessage);
+
+      // Clear the form fields
+      setDepositData({
+        wallet_name: "",
+        amount: "",
+      });
+
+      // Hide the message after a delay
+      setTimeout(() => {
+        e.target.removeChild(successMessage);
+      }, 2000);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const handleWithdraw = async (e) => {
+    e.preventDefault(); // Prevent form submission
+
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    if (!userData || !userData.access_token) {
+      console.error("User not authenticated.");
+      return;
+    }
+    const access = userData.access_token;
+
+    const formData = new FormData(e.target);
+
+    const amount = parseFloat(formData.get("amount")); // Convert to number
+    const wallet_name = formData.get("wallet_name");
+    const withdrawData = {
+      wallet_name,
+      amount,
+    };
+
+    if (!withdrawData.wallet_name || !withdrawData.amount) {
+      console.error("Wallet name and amount are required for withdrawal.");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/payout/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access}`,
+        },
+        body: JSON.stringify(withdrawData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Withdrawal request failed");
+      }
+
+      const result = await response.json();
+      console.log("Withdrawal successful:", result);
+    } catch (error) {
+      console.error("Error:", error.message);
+    }
+  };
+
+  const handleSwap = async (e) => {
+    e.preventDefault();
+    const swapData = {
+      from_wallet: e.target.from_wallet.value,
+      to_wallet: e.target.to_wallet.value,
+      amount: e.target.amount.value,
+    };
+
+    const userData = JSON.parse(localStorage.getItem("userData"));
+
+    const access = userData.access_token;
+
+    if (!access) {
+      console.error("User not authenticated.");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/swap/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access}`,
+        },
+        body: JSON.stringify(swapData),
+      });
+      const result = await response.json();
+      console.log(result);
+    } catch (error) {
+      console.error("Error:", error);
     }
   };
 
@@ -100,10 +214,10 @@ const Actions = () => {
             <DrawerDescription className="p-4">
               {activeAction === "Deposit" && (
                 <>
-                  <form>
+                  <form onSubmit={handleDeposit}>
                     <div className="mb-4">
                       <label
-                        htmlFor="depositAmount"
+                        htmlFor="amount"
                         className="block text-sm font-medium text-primary-700 mb-1"
                       >
                         Amount
@@ -114,35 +228,14 @@ const Actions = () => {
                         </span>
                         <input
                           type="number"
-                          id="depositAmount"
-                          name="depositAmount"
+                          id="amount"
+                          name="amount"
+                          value={depositData.amount}
                           min="0"
                           step="0.01"
                           required
                           className="block w-full pl-7 pr-12 py-2 border border-green-500 rounded-md focus:ring-primary-500 focus:border-primary-500"
                           placeholder="0.00"
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                    </div>
-                    <div className="mb-4">
-                      <label
-                        htmlFor="phoneNumber"
-                        className="block text-sm font-medium text-primary-700 mb-1"
-                      >
-                        Phone Number
-                      </label>
-                      <div className="relative">
-                        <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-green-500 text-sm ">
-                          <Phone className="" />
-                        </span>
-                        <input
-                          type="tel"
-                          id="phoneNumber"
-                          name="phoneNumber"
-                          required
-                          className="w-full pl-10 pr-12 py-2 border border-green-500 rounded-md focus:ring-green-500 focus:border-green-500"
-                          placeholder="Enter your phone number"
                           onChange={handleInputChange}
                         />
                       </div>
@@ -156,9 +249,9 @@ const Actions = () => {
                           <University className="text-3xl text-green-600 mb-2" />
                           <input
                             type="radio"
-                            name="depositMethod"
-                            value="bank"
-                            className="sr-only  "
+                            name="wallet_name"
+                            value="evcplus"
+                            className="sr-only"
                             onChange={handlePaymentMethodChange}
                             required
                           />
@@ -170,7 +263,7 @@ const Actions = () => {
                           <FaCcVisa className="text-3xl text-green-600 mb-2" />
                           <input
                             type="radio"
-                            name="depositMethod"
+                            name="wallet_name"
                             value="card"
                             className="sr-only"
                             onChange={handlePaymentMethodChange}
@@ -184,7 +277,7 @@ const Actions = () => {
                           <Bitcoin className="text-3xl text-green-600 mb-2" />
                           <input
                             type="radio"
-                            name="depositMethod"
+                            name="wallet_name"
                             value="crypto"
                             className="sr-only"
                             onChange={handlePaymentMethodChange}
@@ -200,55 +293,11 @@ const Actions = () => {
                     >
                       Deposit
                     </button>
-                    {showInstructions && (
-                      <div
-                        id="paymentInstructions"
-                        className="mt-6 bg-green-50 border border-green-200 rounded-lg p-4"
-                      >
-                        <h3 className="text-lg font-semibold text-green-800 mb-2">
-                          To finish deposit, please follow the payment
-                          instructions:
-                        </h3>
-                        <div className="flex items-center justify-between bg-white p-3 rounded-md">
-                          <span className="text-green-700 font-medium">
-                            *712*{depositData.phoneNumber}*
-                            {depositData.depositAmount}#
-                          </span>
-                          <button
-                            onClick={() =>
-                              handleCopy(
-                                `*712*${depositData.phoneNumber}*${depositData.depositAmount}#`
-                              )
-                            }
-                            className="text-green-600 hover:text-green-800"
-                          >
-                            <Copy className="w-5" />
-                          </button>
-                        </div>
-                        {copySuccess && (
-                          <div className="mt-2 text-green-500 text-sm">
-                            Copied to clipboard!
-                          </div>
-                        )}
-                        <div className="mt-4 flex justify-between">
-                          <button
-                            type=""
-                            onClick={HandlePay}
-                            className="bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 transition duration-300"
-                          >
-                            Dir Lacagta
-                          </button>
-                          <button className="bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 transition duration-300">
-                            Complete
-                          </button>
-                        </div>
-                      </div>
-                    )}
                   </form>
                 </>
               )}
               {activeAction === "Withdraw" && (
-                <form id="withdrawForm">
+                <form id="withdrawForm" onSubmit={handleWithdraw}>
                   <div className="mb-4">
                     <label
                       htmlFor="withdrawAmount"
@@ -262,8 +311,8 @@ const Actions = () => {
                       </span>
                       <input
                         type="number"
-                        id="withdrawAmount"
-                        name="withdrawAmount"
+                        id="amount"
+                        name="amount"
                         min="0"
                         step="0.01"
                         required
@@ -280,13 +329,13 @@ const Actions = () => {
                       Withdrawal Method
                     </label>
                     <select
-                      id="withdrawMethod"
-                      name="withdrawMethod"
+                      id="wallet_name"
+                      name="wallet_name"
                       required
                       className="block w-full py-2 px-3 border border-green-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                     >
                       <option value="">Select a method</option>
-                      <option value="bank">EVC PLUS</option>
+                      <option value="evcplus">EVC PLUS</option>
                       <option value="card">MONEY GO</option>
                       <option value="crypto">GOLIS</option>
                     </select>
@@ -300,60 +349,62 @@ const Actions = () => {
                 </form>
               )}
               {activeAction === "Swap" && (
-                <form onsubmit="handleSwap(event)">
-                  <div class="mb-4">
+                <form onSubmit={handleSwap}>
+                  <div className="mb-4">
                     <label
-                      for="fromCurrency"
-                      class="block text-sm font-medium text-green-700 mb-1"
+                      htmlFor="fromCurrency"
+                      className="block text-sm font-medium text-green-700 mb-1"
                     >
                       From
                     </label>
                     <select
-                      id="fromCurrency"
-                      name="fromCurrency"
+                      id="from_wallet"
+                      name="from_wallet"
                       required
-                      class="block w-full py-2 px-3 border border-green-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                      className="block w-full py-2 px-3 border border-green-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                     >
-                      <option value="USD">USD</option>
+                      <option value="">Select A wallet</option>
+                      <option value="evcplus">EVC PLUS</option>
                     </select>
                   </div>
-                  <div class="mb-4">
+                  <div className="mb-4">
                     <label
-                      for="toCurrency"
-                      class="block text-sm font-medium text-green-700 mb-1"
+                      htmlFor="toCurrency"
+                      className="block text-sm font-medium text-green-700 mb-1"
                     >
                       To
                     </label>
                     <select
-                      id="toCurrency"
-                      name="toCurrency"
+                      id="to_wallet"
+                      name="to_wallet"
                       required
-                      class="block w-full py-2 px-3 border border-green-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                      className="block w-full py-2 px-3 border border-green-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                     >
-                      <option value="USDT">USDT</option>
+                      <option value="">Select A wallet</option>
+                      <option value="usdt">USDT</option>
                     </select>
                   </div>
-                  <div class="mb-4">
+                  <div className="mb-4">
                     <label
-                      for="swapAmount"
-                      class="block text-sm font-medium text-green-700 mb-1"
+                      htmlFor="swapAmount"
+                      className="block text-sm font-medium text-green-700 mb-1"
                     >
                       Amount
                     </label>
                     <input
                       type="number"
-                      id="swapAmount"
-                      name="swapAmount"
+                      id="amount"
+                      name="amount"
                       min="0"
                       step="0.01"
                       required
-                      class="block w-full py-2 px-3 border border-green-300 rounded-md focus:ring-green-500 focus:border-green-500"
+                      className="block w-full py-2 px-3 border border-green-300 rounded-md focus:ring-green-500 focus:border-green-500"
                       placeholder="0.00"
                     />
                   </div>
                   <button
                     type="submit"
-                    class="w-full bg-green-600 text-white font-semibold py-3 px-4 rounded-xl hover:bg-green-700 transition duration-300"
+                    className="w-full bg-green-600 text-white font-semibold py-3 px-4 rounded-xl hover:bg-green-700 transition duration-300"
                   >
                     Swap
                   </button>
