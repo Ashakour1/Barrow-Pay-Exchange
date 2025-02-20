@@ -6,11 +6,20 @@ import Login from "./components/LoginForm";
 import Profile from "./pages/Dashboard/Profile";
 import TransactionList from "./pages/Dashboard/TransactionList";
 import Dashboard from "./pages/Dashboard/Dashboard";
+import Register from "./components/Register";
 
 function App() {
   return (
     <Router>
       <Routes>
+        <Route
+          path="/register"
+          element={
+            <div>
+              <Register />
+            </div>
+          }
+        />
         <Route
           path="/login"
           element={
