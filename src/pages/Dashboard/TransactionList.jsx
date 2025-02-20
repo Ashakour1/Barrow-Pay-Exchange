@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import {
@@ -11,18 +11,44 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { transactions } from "../../data/transaction";
+import { useNavigate } from "react-router-dom";
+
 const TransactionList = () => {
   const [modalData, setModalData] = useState(null);
+  const [transactions, setTransactions] = useState([]);
 
- 
   const OpenDrawer = (transaction) => {
     setModalData(transaction);
   };
 
-  //   const closeModal = () => {
-  //     setModalData(null);
-  //   };
+  const navigate = useNavigate();
+
+  const fetchTransactions = async () => {
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    const access = userData.access_token;
+    if (!access) {
+      navigate(`/?redirectTo=${location.pathname}`);
+      return;
+    }
+    try {
+      const response = await fetch("/api/transactions/", {
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setTransactions(data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTransactions();
+  }, []);
 
   return (
     <div className="bg-white text-primary-950">
@@ -32,39 +58,51 @@ const TransactionList = () => {
         <section className="mb-8">
           <div className="space-y-4 bg">
             <Drawer>
-              {transactions.map((transaction) => (
-                <DrawerTrigger key={transaction.id} className="w-full">
-                  <div
-                    key={transaction.id}
-                    on
-                    className="flex items-center justify-between p-3 border border-primary-100 rounded-xl transition duration-300 cursor-pointer hover:bg-primary-50"
-                    onClick={() => setModalData(transaction)}
+              {transactions.length === 0 ? (
+                <p>No transactions available</p>
+              ) : (
+                transactions.map((transaction) => (
+                  <DrawerTrigger
+                    key={transaction.transaction_id}
+                    className="w-full"
                   >
-                    <div className="flex items-center space-x-3">
-                      <div className="bg-primary-100 p-2 rounded-full">
-                        <img
-                          src={transaction.img}
-                          className="w-18 "
-                          alt="Transaction"
-                        />
+                    <div
+                      key={transaction.transaction_id}
+                      className="flex items-center justify-between p-3 border border-primary-100 rounded-xl transition duration-300 cursor-pointer hover:bg-primary-50"
+                      onClick={() => setModalData(transaction)}
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div className="bg-primary-100 p-2 border rounded-xl">
+                          <img
+                            src={
+                              transaction.wallet === "evcplus"
+                                ? "evc-plus.png"
+                                : transaction.img
+                            }
+                            className="w-18  "
+                            alt="Transaction"
+                          />
+                        </div>
+                        <div>
+                          <p className="font-medium  text-primary-800">
+                            {transaction.transaction_type}
+                          </p>
+                          <p className="text-xs text-gray-500 text-start text-primary-500">
+                            {new Date(
+                              transaction.created_at
+                            ).toLocaleDateString()}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-medium  text-primary-800">
-                          {transaction.type}
-                        </p>
-                        <p className="text-xs text-start text-primary-500">
-                          {transaction.date}
-                        </p>
-                      </div>
+                      <span className={`${transaction.color} font-medium`}>
+                        {transaction.type === "Withdraw"
+                          ? `-$${transaction.amount.toFixed(2)}`
+                          : `+$${transaction.amount.toFixed(2)}`}
+                      </span>
                     </div>
-                    <span className={`${transaction.color} font-medium`}>
-                      {transaction.type === "Withdraw"
-                        ? `-$${transaction.amount.toFixed(2)}`
-                        : `+$${transaction.amount.toFixed(2)}`}
-                    </span>
-                  </div>
-                </DrawerTrigger>
-              ))}
+                  </DrawerTrigger>
+                ))
+              )}
 
               <DrawerContent className="max-w-[600px] mx-auto rounded-t-3xl p-4">
                 <DrawerHeader>
@@ -80,7 +118,9 @@ const TransactionList = () => {
                         <p className="text-primary-800 text-lg font-semibold ">
                           Transaction ID
                         </p>
-                        <p className="font-medium text-lg">{modalData.id}</p>
+                        <p className="font-medium text-lg">
+                          {modalData.transaction_id}
+                        </p>
                       </div>
                       <div className="flex items-center justify-between mb-4">
                         <p className="text-primary-800 text-lg font-semibold">
@@ -102,7 +142,9 @@ const TransactionList = () => {
                         <p className="text-primary-800 text-lg font-semibold">
                           Date
                         </p>
-                        <p className="font-medium text-lg ">{modalData.date}</p>
+                        <p className="font-medium text-lg ">
+                          {new Date(modalData.created_at).toLocaleDateString()}
+                        </p>
                       </div>
 
                       <div className="flex items-center justify-between mb-4">
