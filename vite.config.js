@@ -11,7 +11,12 @@ export default defineConfig({
     },
   },
   server: {
-    host: "192.168.100.19",
-    port: 3000,
+    proxy: {
+      "/api": "https://web-production-bcc7.up.railway.app",
+    },
   },
+  // server: {
+  //   host: "192.168.100.19",
+  //   port: 3000,
+  // },
 });
