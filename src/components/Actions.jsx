@@ -28,6 +28,7 @@ const Actions = () => {
   const [depositData, setDepositData] = useState({
     wallet_name: "evcplus" || "card" || "crypto",
     amount: "",
+    phone_number: "",
   });
 
   const handlePaymentMethodChange = (event) => {
@@ -61,6 +62,8 @@ const Actions = () => {
   const handleDeposit = async (e) => {
     const userData = JSON.parse(localStorage.getItem("userData"));
     const access = userData.access_token;
+
+    console.log(access);
 
     console.log(depositData);
 
@@ -236,6 +239,28 @@ const Actions = () => {
                           required
                           className="block w-full pl-7 pr-12 py-2 border border-green-500 rounded-md focus:ring-primary-500 focus:border-primary-500"
                           placeholder="0.00"
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                    </div>
+                    <div className="mb-4">
+                      <label
+                        htmlFor="phone_number"
+                        className="block text-sm font-medium text-primary-700 mb-1"
+                      >
+                        Phone Number
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="number"
+                          id="phone_number"
+                          name="phone_number"
+                          value={depositData.phone_number}
+                          min="0"
+                          step="0.01"
+                          required
+                          className="block w-full pl-2 pr-12 py-2 border border-green-500 rounded-md focus:ring-primary-500 focus:border-primary-500"
+                          placeholder="61635353"
                           onChange={handleInputChange}
                         />
                       </div>
