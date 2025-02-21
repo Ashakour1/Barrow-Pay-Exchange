@@ -1,6 +1,6 @@
 import { Lock, User, Mail, Phone } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [registerData, setRegisterData] = useState({
@@ -36,10 +36,10 @@ const Register = () => {
   };
 
   return (
-    <div className="bg-green-100 flex items-center justify-center min-h-screen">
+    <div className="flex items-center justify-center min-h-screen">
       <div className="w-full max-w-md px-4">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-green-600">FinTech 2025</h1>
+          <h1 className="text-4xl font-bold text-green-600">Barrow Pay</h1>
           <p className="text-green-600 mt-2 ">Create your account below.</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -153,9 +153,9 @@ const Register = () => {
         </form>
         <p className="text-center text-primary-600 text-sm mt-6">
           Already have an account?{" "}
-          <a href="#" className="font-bold hover:text-primary-700">
+          <Link to="/login" className="font-bold hover:text-primary-700">
             Sign in
-          </a>
+          </Link>
         </p>
       </div>
     </div>

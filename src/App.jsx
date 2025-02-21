@@ -12,17 +12,42 @@ import PrivateRoutes from "./routes/protectedRoutes";
 function App() {
   return (
     <Router>
-      <Header />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<PrivateRoutes />}>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/transactions" element={<TransactionList />} />
+          <Route
+            path="/"
+            element={
+              <>
+                <Header />
+                <Dashboard />
+                <Footer />
+              </>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <>
+                <Header />
+                <Profile />
+                <Footer />
+              </>
+            }
+          />
+          <Route
+            path="/transactions"
+            element={
+              <>
+                <Header />
+                <TransactionList />
+                <Footer />
+              </>
+            }
+          />
         </Route>
       </Routes>
-      <Footer />
     </Router>
   );
 }
