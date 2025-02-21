@@ -15,38 +15,38 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/" element={<PrivateRoutes />}>
-          <Route
-            path="/"
-            element={
-              <>
-                <Header />
-                <Dashboard />
-                <Footer />
-              </>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <>
-                <Header />
-                <Profile />
-                <Footer />
-              </>
-            }
-          />
-          <Route
-            path="/transactions"
-            element={
-              <>
-                <Header />
-                <TransactionList />
-                <Footer />
-              </>
-            }
-          />
-        </Route>
+        {/* <Route path="/" element={<PrivateRoutes />}> */}
+        <Route
+          path="/"
+          element={
+            <>
+              <Header />
+              <Dashboard />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <>
+              <Header />
+              <Profile />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/transactions"
+          element={
+            <>
+              <Header />
+              <TransactionList />
+              <Footer />
+            </>
+          }
+        />
+        {/* </Route> */}
       </Routes>
     </Router>
   );
