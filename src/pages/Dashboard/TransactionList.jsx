@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 const TransactionList = () => {
   const [modalData, setModalData] = useState(null);
   const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const OpenDrawer = (transaction) => {
     setModalData(transaction);
@@ -25,7 +26,7 @@ const TransactionList = () => {
 
   const fetchTransactions = async () => {
     const userData = JSON.parse(localStorage.getItem("userData"));
-    const access = userData.access_token;
+    const access = userData.access;
     if (!access) {
       navigate(`/?redirectTo=${location.pathname}`);
       return;
@@ -41,8 +42,10 @@ const TransactionList = () => {
       }
       const data = await response.json();
       setTransactions(data);
+      setLoading(false); // Set loading to false once the data is fetched
     } catch (error) {
       console.error("Error:", error);
+      setLoading(false); // Set loading to false if there's an error
     }
   };
 
@@ -50,15 +53,35 @@ const TransactionList = () => {
     fetchTransactions();
   }, []);
 
+  const renderSkeleton = () => (
+    <div className="flex items-center justify-between p-3 border border-primary-100 rounded-xl">
+      <div className="flex items-center space-x-3">
+        <div className="bg-primary-100 p-2 border rounded-xl animate-pulse">
+          <div className="bg-gray-300 w-18 h-18 rounded-xl"></div>
+        </div>
+        <div className="space-y-2">
+          <div className="bg-gray-300 w-24 h-4 rounded-md animate-pulse"></div>
+          <div className="bg-gray-300 w-16 h-4 rounded-md animate-pulse"></div>
+        </div>
+      </div>
+      <div className="bg-gray-300 w-24 h-6 rounded-md animate-pulse"></div>
+    </div>
+  );
+
   return (
     <div className="bg-white text-primary-950">
       <Header />
 
       <main className="px-4 pt-20 pb-24">
         <section className="mb-8">
-          <div className="space-y-4 bg">
+          <div className="space-y-4">
             <Drawer>
-              {transactions.length === 0 ? (
+              {loading ? (
+                // Display skeletons if loading
+                Array(5)
+                  .fill()
+                  .map((_, index) => <div key={index}>{renderSkeleton()}</div>)
+              ) : transactions.length === 0 ? (
                 <p>No transactions available</p>
               ) : (
                 transactions.map((transaction) => (
@@ -79,13 +102,19 @@ const TransactionList = () => {
                                 ? "evc-plus.png"
                                 : transaction.img
                             }
-                            className="w-18  "
+                            className="w-18"
                             alt="Transaction"
                           />
                         </div>
                         <div>
-                          <p className="font-medium  text-primary-800">
-                            {transaction.transaction_type}
+                          <p
+                            className={`font-medium text-primary-800 ${
+                              transaction.transaction_type === "Payout"
+                                ? "text-red-500"
+                                : "text-green-500"
+                            }`}
+                          >
+                            {transaction.type}
                           </p>
                           <p className="text-xs text-gray-500 text-start text-primary-500">
                             {new Date(
@@ -95,7 +124,7 @@ const TransactionList = () => {
                         </div>
                       </div>
                       <span className={`${transaction.color} font-medium`}>
-                        {transaction.type === "Withdraw"
+                        {transaction.transaction_type === "Payout"
                           ? `-$${transaction.amount.toFixed(2)}`
                           : `+$${transaction.amount.toFixed(2)}`}
                       </span>
@@ -126,9 +155,7 @@ const TransactionList = () => {
                         <p className="text-primary-800 text-lg font-semibold">
                           Type
                         </p>
-                        <p className="font-medium  text-lg ">
-                          {modalData.type}
-                        </p>
+                        <p className="font-medium text-lg ">{modalData.type}</p>
                       </div>
                       <div className="flex items-center justify-between mb-4">
                         <p className="text-primary-800 text-lg font-semibold">

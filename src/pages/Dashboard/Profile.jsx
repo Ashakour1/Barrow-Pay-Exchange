@@ -1,67 +1,206 @@
-import { useState } from "react";
-import { FaBell, FaMoon, FaExchangeAlt, FaHome, FaUser } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { Button } from "../../components/ui/button";
+import { Card, CardContent } from "../../components/ui/card";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "../../components/ui/avatar";
+import { Badge } from "../../components/ui/badge";
+import {
+  CreditCard,
+  DollarSign,
+  Phone,
+  Mail,
+  Edit,
+  LogOut,
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-const Profile = () => {
-  const [darkMode, setDarkMode] = useState(false);
+// Skeleton Loader Component
+const SkeletonLoader = () => (
+  <div className="animate-pulse space-y-4">
+    <div className="h-24 w-24 bg-gray-300 rounded-full"></div>
+    <div className="h-6 bg-gray-300 rounded w-1/3"></div>
+    <div className="h-4 bg-gray-300 rounded w-2/3"></div>
+    <div className="h-6 bg-gray-300 rounded w-1/2"></div>
+  </div>
+);
 
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-    document.documentElement.classList.toggle("dark");
+export default function ProfilePage() {
+  const [transactions, setTransactions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // Loading state
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
+  const fetchTransactions = async () => {
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    const access = userData?.access;
+    if (!access) {
+      navigate(`/?redirectTo=${location.pathname}`);
+      return;
+    }
+
+    try {
+      const cachedData = localStorage.getItem("transactions");
+      if (cachedData) {
+        setTransactions(JSON.parse(cachedData));
+        setIsLoading(false);
+      } else {
+        const response = await fetch("/api/transactions/", {
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        localStorage.setItem("transactions", JSON.stringify(data)); // Cache the data
+        setTransactions(data);
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setIsLoading(false);
+    }
   };
 
+  const handleLogout = () => {
+    // Clear user data from localStorage
+    localStorage.removeItem("userData");
+    localStorage.removeItem("transactions");
+
+    // Redirect to the login page
+    navigate("/login");
+  };
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    setUser(userData);
+  }, []);
+
+  useEffect(() => {
+    fetchTransactions();
+  }, []);
+
   return (
-    <div
-      className={`min-h-screen ${
-        darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
-      }`}
-    >
-      {/* Header */}
-
-      {/* Main Content */}
-      <main className="px-4 pt-20 pb-24">
-        {/* Profile Header */}
-        <section className="mb-8 text-center">
-          <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-4 border-green-500">
-            <img
-              src="https://via.placeholder.com/150"
-              alt="Profile"
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <h1 className="text-2xl font-bold text-green-800 mb-2">John Doe</h1>
-          <p className="text-green-600 mb-4">john.doe@example.com</p>
-          <button className="bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600 transition">
-            Edit Profile
-          </button>
-        </section>
-
-        {/* Account Information */}
-        <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-green-800">
-            Account Information
-          </h2>
-          <div className="bg-white dark:bg-gray-700 rounded-xl shadow-md p-4">
-            <div className="flex justify-between items-center mb-3">
-              <span className="text-green-600">Account ID</span>
-              <span className="font-medium">123456789</span>
+    <div className="min-h-screen bg-background py-8 mt-10 px-4">
+      <div className="w-full mx-auto space-y-6">
+        {/* Profile Card */}
+        <Card className="border border-green-500">
+          <CardContent className="pt-6">
+            <div className="flex flex-col items-center space-y-4">
+              {isLoading ? (
+                <SkeletonLoader />
+              ) : (
+                <>
+                  <Avatar className="w-24 h-24">
+                    <AvatarImage
+                      src="/placeholder.svg?height=96&width=96"
+                      alt="User Avatar"
+                    />
+                    <AvatarFallback>JD</AvatarFallback>
+                  </Avatar>
+                  <div className="text-center">
+                    <h1 className="text-2xl text-green-500 font-bold">
+                      {user?.name || "John Doe"}
+                    </h1>
+                    <p className="text-muted-foreground">Verified</p>
+                  </div>
+                </>
+              )}
             </div>
-            <div className="flex justify-between items-center mb-3">
-              <span className="text-green-600">Joined Date</span>
-              <span className="font-medium">May 1, 2023</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-green-600">Verification Status</span>
-              <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">
-                Verified
-              </span>
-            </div>
-          </div>
-        </section>
-      </main>
+          </CardContent>
+        </Card>
 
-      {/* Bottom Navigation */}
+        {/* User Info Card */}
+        <Card className="border border-green-500">
+          <CardContent className="pt-6">
+            {isLoading ? (
+              <SkeletonLoader />
+            ) : (
+              <div className="space-y-4">
+                <div className="flex items-center">
+                  <Phone className="mr-2 h-5 w-5 text-green-500" />
+                  <span>+1 (555) 123-4567</span>
+                </div>
+                <div className="flex items-center">
+                  <Mail className="mr-2 h-5 w-5 text-green-500" />
+                  <span>john.doe@example.com</span>
+                </div>
+                <div className="flex items-center">
+                  <CreditCard className="mr-2 h-5 w-5 text-green-500" />
+                  <span>Visa •••• 4567</span>
+                </div>
+                <div className="flex items-center">
+                  <DollarSign className="mr-2 h-5 w-5 text-green-500" />
+                  <span>Balance: $1,234.56</span>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Transactions Card */}
+        <Card className="border border-green-500">
+          <CardContent className="pt-6">
+            <h2 className="text-xl font-semibold text-green-500 mb-4">
+              Recent Transactions
+            </h2>
+            {isLoading ? (
+              <SkeletonLoader />
+            ) : (
+              <div className="space-y-4">
+                {transactions.slice(0, 3).map((transaction) => (
+                  <div
+                    key={transaction.id}
+                    className="flex justify-between items-center"
+                  >
+                    <div>
+                      <p
+                        className={`font-medium text-primary-800 ${
+                          transaction.transaction_type === "Payout"
+                            ? "text-red-500"
+                            : "text-green-500"
+                        }`}
+                      >
+                        {transaction.type}
+                      </p>
+                      <p className="text-xs text-gray-500 text-start text-primary-500">
+                        {new Date(transaction.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <Badge
+                      variant={transaction.amount > 0 ? "default" : "green"}
+                      className={`font-medium ${
+                        transaction.type === "Payout"
+                          ? "text-red-500"
+                          : "border bg-white  border-green-500 text-black text-sm"
+                      }`}
+                    >
+                      {transaction.amount > 0 ? "+" : "-"}$
+                      {Math.abs(transaction.amount).toFixed(2)}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Logout Button */}
+        <Button
+          variant="outline"
+          onClick={handleLogout}
+          className="w-full border text-sm text-red-500 border-red-500 mt-4 flex justify-center items-center cursor-pointer"
+        >
+          <LogOut className="text-red-500  mr-2 h-4 w-4" />
+          Logout
+        </Button>
+      </div>
     </div>
   );
-};
-
-export default Profile;
+}
