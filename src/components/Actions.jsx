@@ -61,7 +61,7 @@ const Actions = () => {
 
   const handleDeposit = async (e) => {
     const userData = JSON.parse(localStorage.getItem("userData"));
-    const access = userData.access_token;
+    const access = userData.access;
 
     console.log(access);
 
@@ -107,11 +107,11 @@ const Actions = () => {
     e.preventDefault(); // Prevent form submission
 
     const userData = JSON.parse(localStorage.getItem("userData"));
-    if (!userData || !userData.access_token) {
+    if (!userData || !userData.access) {
       console.error("User not authenticated.");
       return;
     }
-    const access = userData.access_token;
+    const access = userData.access;
 
     const formData = new FormData(e.target);
 
@@ -158,7 +158,7 @@ const Actions = () => {
 
     const userData = JSON.parse(localStorage.getItem("userData"));
 
-    const access = userData.access_token;
+    const access = userData.access;
 
     if (!access) {
       console.error("User not authenticated.");
@@ -187,7 +187,7 @@ const Actions = () => {
         <Drawer key={action}>
           <DrawerTrigger asChild>
             <button
-              className="p-4 flex flex-col items-center justify-center group"
+              className="mt-4 p-4 flex flex-col items-center justify-center group"
               onClick={() => setActiveAction(action)}
             >
               <div className="bg-green-100 p-3 rounded-full mb-2 group-hover:bg-green-200 transition duration-300">
