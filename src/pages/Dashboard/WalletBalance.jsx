@@ -8,9 +8,9 @@ const WalletBalance = () => {
   const fetchBalance = async () => {
     const userData = JSON.parse(localStorage.getItem("userData"));
     const access = userData.access;
-    if (!access) {
-      navigate(`/?redirectTo=${location.pathname}`);
-    }
+    // if (!access) {
+    //   navigate(`/?redirectTo=${location.pathname}`);
+    // }
     try {
       const response = await fetch("/api/balance/", {
         method: "GET",
