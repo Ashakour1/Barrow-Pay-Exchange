@@ -7,56 +7,22 @@ import Profile from "./pages/Dashboard/Profile";
 import TransactionList from "./pages/Dashboard/TransactionList";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Register from "./components/Register";
+import PrivateRoutes from "./routes/protectedRoutes";
 
 function App() {
   return (
     <Router>
+      <Header />
       <Routes>
-        <Route
-          path="/register"
-          element={
-            <div>
-              <Register />
-            </div>
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <div>
-              <Login />
-            </div>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <div>
-              <Header />
-              <Profile />
-              <Footer />
-            </div>
-          }
-        />{" "}
-        <Route
-          path="/transactions"
-          element={
-            <div>
-              <TransactionList />
-            </div>
-          }
-        />
-        <Route
-          path="/"
-          element={
-            <div>
-              <Header />
-              <Dashboard />
-              <Footer />
-            </div>
-          }
-        />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/" element={<PrivateRoutes />}>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/transactions" element={<TransactionList />} />
+        </Route>
       </Routes>
+      <Footer />
     </Router>
   );
 }
