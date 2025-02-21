@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [registerData, setRegisterData] = useState({
-    fullName: "",
+    full_name: "",
     email: "",
-    phoneNumber: "",
+    phone_number: "",
     password: "",
   });
 
@@ -21,9 +21,9 @@ const Register = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          fullName: registerData.fullName,
+          full_name: registerData.full_name,
           email: registerData.email,
-          phoneNumber: registerData.phoneNumber,
+          phone_number: registerData.phone_number,
           password: registerData.password,
         }),
       });
