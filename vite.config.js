@@ -12,7 +12,8 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      "/api": "https://web-production-bcc7.up.railway.app",
+      "/auth/": "https://web-production-bcc7.up.railway.app/",
+      "/api/": "https://web-production-bcc7.up.railway.app/",
     },
   },
   // server: {
