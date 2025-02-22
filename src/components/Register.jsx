@@ -15,7 +15,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/register/", {
+      const response = await fetch("https://web-production-bcc7.up.railway.app/api/register/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

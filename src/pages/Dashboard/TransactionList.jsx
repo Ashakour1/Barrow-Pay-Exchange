@@ -29,12 +29,12 @@ const TransactionList = () => {
   const fetchTransactions = async () => {
     const userData = JSON.parse(localStorage.getItem("userData"));
     const access = userData.access;
-    if (!access) {
-      navigate(`/?redirectTo=${location.pathname}`);
-      return;
-    }
+    // if (!access) {
+    //   navigate(`/?redirectTo=${location.pathname}`);
+    //   return;
+    // }
     try {
-      const response = await fetch("/api/transactions/", {
+      const response = await fetch("https://web-production-bcc7.up.railway.app/api/transactions/", {
         headers: {
           Authorization: `Bearer ${access}`,
         },

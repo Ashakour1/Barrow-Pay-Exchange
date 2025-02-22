@@ -48,11 +48,14 @@ const RecentTransactions = () => {
     // }
 
     try {
-      const response = await fetch("/api/transactions/", {
-        headers: {
-          Authorization: `Bearer ${access}`,
-        },
-      });
+      const response = await fetch(
+        "https://web-production-bcc7.up.railway.app/api/transactions/",
+        {
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -143,7 +146,9 @@ const RecentTransactions = () => {
                         <p className="text-green-800 text-lg font-semibold ">
                           Transaction ID
                         </p>
-                        <p className="font-medium text-lg">{modalData.transaction_id}</p>
+                        <p className="font-medium text-lg">
+                          {modalData.transaction_id}
+                        </p>
                       </div>
                       <div className="flex items-center justify-between mb-4">
                         <p className="text-green-800 text-lg font-semibold">
@@ -163,7 +168,9 @@ const RecentTransactions = () => {
                         <p className="text-green-800 text-lg font-semibold">
                           Date
                         </p>
-                        <p className="font-medium text-lg ">{modalData.created_at.slice(0,10)}</p>
+                        <p className="font-medium text-lg ">
+                          {modalData.created_at.slice(0, 10)}
+                        </p>
                       </div>
 
                       <div className="flex items-center justify-between mb-4">

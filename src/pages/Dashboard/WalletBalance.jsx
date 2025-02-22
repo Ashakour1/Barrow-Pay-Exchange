@@ -44,12 +44,15 @@ const WalletBalance = () => {
     const userData = JSON.parse(localStorage.getItem("userData"));
     const access = userData.access;
     try {
-      const response = await fetch("/api/balance/", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${access}`,
-        },
-      });
+      const response = await fetch(
+        "https://web-production-bcc7.up.railway.app/api/balance/",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -68,12 +71,15 @@ const WalletBalance = () => {
     const userData = JSON.parse(localStorage.getItem("userData"));
     const access = userData.access;
     try {
-      const response = await fetch("/api/pending-payments/", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${access}`,
-        },
-      });
+      const response = await fetch(
+        "https://web-production-bcc7.up.railway.app/api/pending-payments/",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -140,14 +146,17 @@ const WalletBalance = () => {
     const access = userData.access;
 
     try {
-      const response = await fetch("/api/deposit/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${access}`,
-        },
-        body: JSON.stringify(depositData),
-      });
+      const response = await fetch(
+        "https://web-production-bcc7.up.railway.app/api/deposit/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access}`,
+          },
+          body: JSON.stringify(depositData),
+        }
+      );
 
       const responseData = await response.json();
 
@@ -198,14 +207,17 @@ const WalletBalance = () => {
     };
 
     try {
-      const response = await fetch("/api/payout/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${access}`,
-        },
-        body: JSON.stringify(withdrawData),
-      });
+      const response = await fetch(
+        "https://web-production-bcc7.up.railway.app/api/payout/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access}`,
+          },
+          body: JSON.stringify(withdrawData),
+        }
+      );
 
       if (response.ok) {
         // Close the drawer
@@ -248,14 +260,17 @@ const WalletBalance = () => {
     };
 
     try {
-      const response = await fetch("api/swap/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${access}`,
-        },
-        body: JSON.stringify(swapData),
-      });
+      const response = await fetch(
+        "https://web-production-bcc7.up.railway.app/api/swap/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access}`,
+          },
+          body: JSON.stringify(swapData),
+        }
+      );
 
       if (response.ok) {
         // Close the drawer

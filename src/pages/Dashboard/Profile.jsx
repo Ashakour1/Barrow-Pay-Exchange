@@ -44,7 +44,7 @@ export default function ProfilePage() {
     }
 
     try {
-      const response = await fetch("/auth/users/me/", {
+      const response = await fetch("https://web-production-bcc7.up.railway.app/auth/users/me/", {
         headers: {
           Authorization: `Bearer ${access}`,
         },
@@ -75,7 +75,7 @@ export default function ProfilePage() {
         setTransactions(JSON.parse(cachedData));
         setIsLoading(false);
       } else {
-        const response = await fetch("/api/transactions/", {
+        const response = await fetch("https://web-production-bcc7.up.railway.app/api/transactions/", {
           headers: {
             Authorization: `Bearer ${access}`,
           },
