@@ -333,7 +333,7 @@ const WalletBalance = () => {
 
           <div className="mb-8">
             <div className="text-5xl font-bold">
-              ${balance?.evcplus ?? "0.0"}
+              ${balance?.evcplus.toFixed(2) ?? "0.0"}
             </div>
             <div className="text-sm text-white mt-1">Total Balance</div>
           </div>
@@ -356,7 +356,7 @@ const WalletBalance = () => {
               <div className="relative z-10">
                 <CircleDollarSign className="w-4 h-4 mb-3 text-blue-600 dark:text-blue-400" />
                 <div className="text-xl font-semibold">
-                  ${balance?.evcplus ?? "0.0"}
+                  ${balance?.evcplus.toFixed(2) ?? "0.0"}
                 </div>
                 <div className="text-sm text-muted-foreground mt-1">
                   Available
