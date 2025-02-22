@@ -2,9 +2,10 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
+
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [tailwindcss(), , react()],
+  plugins: [tailwindcss(), react()], // Fixed: Removed extra comma
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -12,13 +13,19 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      "/auth/": "https://web-production-bcc7.up.railway.app/",
-      "/api/": "https://web-production-bcc7.up.railway.app/",
-      
+      "/auth/": {
+        target: "https://web-production-bcc7.up.railway.app/",
+        changeOrigin: true,
+        secure: false, // Optional: Use if the target uses a self-signed certificate
+      },
+      "/api/": {
+        target: "https://web-production-bcc7.up.railway.app/",
+        changeOrigin: true,
+        secure: false, // Optional: Use if the target uses a self-signed certificate
+      },
     },
+    // Uncomment the following if you want to use a custom host and port
+    // host: "192.168.100.19",
+    // port: 3000,
   },
-  // server: {
-  //   host: "192.168.100.19",
-  //   port: 3000,
-  // },
 });
