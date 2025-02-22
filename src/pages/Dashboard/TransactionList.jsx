@@ -113,7 +113,7 @@ const TransactionList = () => {
                             className={`font-medium text-primary-800 ${
                               transaction.type === "Deposit"
                                 ? "text-green-500"
-                                : transaction.type === "Payout"
+                                : transaction.type === "Payout" || transaction.type === "Swap"
                                 ? "text-red-500"
                                 : "text-yellow-500"
                             }`}
@@ -131,12 +131,12 @@ const TransactionList = () => {
                         className={`${
                           transaction.type === "Deposit"
                             ? "text-green-600"
-                            : transaction.type === "Payout"
+                            : transaction.type === "Payout" || transaction.type === "Swap"
                             ? "text-red-500"
                             : "text-yellow-500"
                         } font-medium`}
                       >
-                        {transaction.type === "Payout"
+                        {transaction.type === "Payout" || transaction.type === "Swap"
                           ? `-$${transaction.amount.toFixed(2)}`
                           : `+$${transaction.amount.toFixed(2)}`}
                       </span>
