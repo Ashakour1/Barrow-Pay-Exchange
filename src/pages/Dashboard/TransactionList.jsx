@@ -18,6 +18,8 @@ const TransactionList = () => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  console.log(transactions);
+
   const OpenDrawer = (transaction) => {
     setModalData(transaction);
   };
@@ -100,7 +102,7 @@ const TransactionList = () => {
                             src={
                               transaction.wallet === "evcplus"
                                 ? "evc-plus.png"
-                                : transaction.img
+                                : "/premier-wallet.png"
                             }
                             className="w-18"
                             alt="Transaction"
@@ -109,9 +111,11 @@ const TransactionList = () => {
                         <div>
                           <p
                             className={`font-medium text-primary-800 ${
-                              transaction.transaction_type === "Payout"
+                              transaction.type === "Deposit"
+                                ? "text-green-500"
+                                : transaction.type === "Payout"
                                 ? "text-red-500"
-                                : "text-green-500"
+                                : "text-yellow-500"
                             }`}
                           >
                             {transaction.type}
@@ -123,8 +127,16 @@ const TransactionList = () => {
                           </p>
                         </div>
                       </div>
-                      <span className={`${transaction.color} font-medium`}>
-                        {transaction.transaction_type === "Payout"
+                      <span
+                        className={`${
+                          transaction.type === "Deposit"
+                            ? "text-green-600"
+                            : transaction.type === "Payout"
+                            ? "text-red-500"
+                            : "text-yellow-500"
+                        } font-medium`}
+                      >
+                        {transaction.type === "Payout"
                           ? `-$${transaction.amount.toFixed(2)}`
                           : `+$${transaction.amount.toFixed(2)}`}
                       </span>
