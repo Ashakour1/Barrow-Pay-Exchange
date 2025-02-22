@@ -42,10 +42,10 @@ const RecentTransactions = () => {
   const fetchTransactions = async () => {
     const userData = JSON.parse(localStorage.getItem("userData"));
     const access = userData?.access;
-    if (!access) {
-      navigate(`/?redirectTo=${location.pathname}`);
-      return;
-    }
+    // if (!access) {
+    //   navigate(`/?redirectTo=${location.pathname}`);
+    //   return;
+    // }
 
     try {
       const response = await fetch("/api/transactions/", {

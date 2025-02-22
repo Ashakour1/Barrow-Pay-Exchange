@@ -17,61 +17,66 @@ function App() {
       <Toaster />
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route
-          path="/"
-          element={
-            <>
-              <Header />
-              <Dashboard />
-              <Footer />
-              <Link
-                to="https://wa.me/yourphonenumber"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="fixed bottom-18 right-6 bg-green-500 text-white p-4 rounded-full shadow-lg flex items-center justify-center"
-              >
-                <FaWhatsapp className="w-8 h-8" />
-              </Link>
-            </>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <>
-              <Header />
-              <Profile />
-              <Footer />
-              <Link
-                to="https://wa.me/yourphonenumber"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="fixed bottom-18 right-6 bg-green-500 text-white p-4 rounded-full shadow-lg flex items-center justify-center"
-              >
-                <FaWhatsapp className="w-8 h-8" />
-              </Link>
-            </>
-          }
-        />
-        <Route
-          path="/transactions"
-          element={
-            <>
-              <Header />
-              <TransactionList />
-              <Footer />
-              <Link
-                to="https://wa.me/yourphonenumber"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="fixed bottom-18 right-6 bg-green-500 text-white p-4 rounded-full shadow-lg flex items-center justify-center"
-              >
-                <FaWhatsapp className="w-8 h-8" />
-              </Link>
-            </>
-          }
-        />
+        <Route element={<PrivateRoutes />}>
+          <Route
+            path="/"
+            element={
+              <>
+                <Header />
+                <Dashboard />
+                <Footer />
+                <Link
+                  to="https://wa.me/yourphonenumber"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="fixed bottom-18 right-6 bg-green-500 text-white p-4 rounded-full shadow-lg flex items-center justify-center"
+                >
+                  <FaWhatsapp className="w-8 h-8" />
+                </Link>
+              </>
+            }
+          />
+          <Route
+            path="/register"
+            element={<Register />}
+          />
+          <Route
+            path="/profile"
+            element={
+              <>
+                <Header />
+                <Profile />
+                <Footer />
+                <Link
+                  to="https://wa.me/yourphonenumber"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="fixed bottom-18 right-6 bg-green-500 text-white p-4 rounded-full shadow-lg flex items-center justify-center"
+                >
+                  <FaWhatsapp className="w-8 h-8" />
+                </Link>
+              </>
+            }
+          />
+          <Route
+            path="/transactions"
+            element={
+              <>
+                <Header />
+                <TransactionList />
+                <Footer />
+                <Link
+                  to="https://wa.me/yourphonenumber"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="fixed bottom-18 right-6 bg-green-500 text-white p-4 rounded-full shadow-lg flex items-center justify-center"
+                >
+                  <FaWhatsapp className="w-8 h-8" />
+                </Link>
+              </>
+            }
+          />
+        </Route>
       </Routes>
     </Router>
   );
