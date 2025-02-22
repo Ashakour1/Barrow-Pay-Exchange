@@ -206,6 +206,16 @@ const TransactionList = () => {
                           )}
                         </p>
                       </div>
+
+                      {modalData.type === "Deposit" &&
+                      modalData.status === "Pending" ? (
+                        <div>
+                          <div className="flex items-center justify-between mb-4"></div>
+                          <p className="text-primary-800 text-lg font-semibold  text-center rounded-full bg-red-500 text-white border-red-500 border">
+                            Recheck
+                          </p>
+                        </div>
+                      ) : null}
                     </>
                   )}
                 </DrawerDescription>
