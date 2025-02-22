@@ -26,14 +26,15 @@ const Login = () => {
 
     try {
       const response = await fetch(
-        "https://web-production-bcc7.up.railway.app/auth/jwt/create/",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(loginData),
-        }
+      "https://web-production-bcc7.up.railway.app/auth/jwt/create/",
+      {
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify(loginData),
+      }
       );
 
       if (!response.ok) {
