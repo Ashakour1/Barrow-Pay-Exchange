@@ -35,7 +35,7 @@ const Login = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error(response.data.message);
       }
 
       const data = await response.json();
@@ -45,7 +45,7 @@ const Login = () => {
       navigate("/");
     } catch (error) {
       console.error("Error:", error);
-      alert("Login failed. Please try again.");
+      alert("Login failed. ");
     } finally {
       setIsLoading(false);
     }
