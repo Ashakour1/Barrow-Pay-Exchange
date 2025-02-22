@@ -12,8 +12,9 @@ import {
   DollarSign,
   Phone,
   Mail,
-  Edit,
   LogOut,
+  User,
+  IdCard,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -32,6 +33,33 @@ export default function ProfilePage() {
   const [isLoading, setIsLoading] = useState(true); // Loading state
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+
+  // Fetch user details from the API
+  const fetchUserDetails = async () => {
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    const access = userData?.access;
+    if (!access) {
+      navigate(`/?redirectTo=${location.pathname}`);
+      return;
+    }
+
+    try {
+      const response = await fetch("/auth/users/me/", {
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      setUser(data); // Update the user state with fetched data
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+    }
+  };
 
   const fetchTransactions = async () => {
     const userData = JSON.parse(localStorage.getItem("userData"));
@@ -78,8 +106,7 @@ export default function ProfilePage() {
   };
 
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("userData"));
-    setUser(userData);
+    fetchUserDetails(); // Fetch user details when the component mounts
   }, []);
 
   useEffect(() => {
@@ -102,11 +129,13 @@ export default function ProfilePage() {
                       src="/placeholder.svg?height=96&width=96"
                       alt="User Avatar"
                     />
-                    <AvatarFallback>JD</AvatarFallback>
+                    <AvatarFallback className="bg-green-500 text-5xl text-white">
+                      {user?.full_name?.charAt(0) || "JD"}
+                    </AvatarFallback>
                   </Avatar>
                   <div className="text-center">
                     <h1 className="text-2xl text-green-500 font-bold">
-                      {user?.name || "John Doe"}
+                      {user?.full_name || "John Doe"}
                     </h1>
                     <p className="text-muted-foreground">Verified</p>
                   </div>
@@ -124,21 +153,22 @@ export default function ProfilePage() {
             ) : (
               <div className="space-y-4">
                 <div className="flex items-center">
+                  <User className="mr-2 h-5 w-5 text-green-500" />
+                  <span>{user?.full_name || "john.doe@example.com"}</span>
+                </div>
+                <div className="flex items-center">
                   <Phone className="mr-2 h-5 w-5 text-green-500" />
-                  <span>+1 (555) 123-4567</span>
+                  <span>{user?.phone_number || "+1 (555) 123-4567"}</span>
                 </div>
-                <div className="flex items-center">
-                  <Mail className="mr-2 h-5 w-5 text-green-500" />
-                  <span>john.doe@example.com</span>
-                </div>
-                <div className="flex items-center">
+
+                {/* <div className="flex items-center">
                   <CreditCard className="mr-2 h-5 w-5 text-green-500" />
                   <span>Visa •••• 4567</span>
-                </div>
-                <div className="flex items-center">
+                </div> */}
+                {/* <div className="flex items-center">
                   <DollarSign className="mr-2 h-5 w-5 text-green-500" />
                   <span>Balance: $1,234.56</span>
-                </div>
+                </div> */}
               </div>
             )}
           </CardContent>
