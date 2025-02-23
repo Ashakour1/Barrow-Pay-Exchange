@@ -35,6 +35,7 @@ const RecentTransactions = () => {
   const [isLoading, setIsLoading] = useState(true); // Loading state
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [swapRates, setSwapRates] = useState([]);
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("userData"));
@@ -55,7 +56,7 @@ const RecentTransactions = () => {
     // }
 
     try {
-      const response = await fetch("https://web-production-bcc7.up.railway.app/api/transactions/", {
+      const response = await fetch("/api/transactions/", {
         headers: {
           Authorization: `Bearer ${access}`,
         },
@@ -74,7 +75,18 @@ const RecentTransactions = () => {
     }
   };
 
+  const fetchSwapRates = async () => {
+    try {
+      const response = await fetch("/api/swap-rates/");
+      const data = await response.json();
+      setSwapRates(data);
+    } catch (error) {
+      console.error("Error fetching swap rates:", error);
+    }
+  };
+
   useEffect(() => {
+    fetchSwapRates();
     fetchTransactions();
   }, []);
 
@@ -152,10 +164,10 @@ const RecentTransactions = () => {
                     <>
                       <div className="flex items-center justify-between mb-4">
                         <p className="text-black text-lg font-semibold ">
-                          Transaction ID
+                          From Wallet
                         </p>
                         <p className="font-medium text-lg">
-                          {modalData.transaction_id}
+                          {modalData.phone_number}
                         </p>
                       </div>
                       <div className="flex items-center justify-between mb-4">
@@ -170,10 +182,11 @@ const RecentTransactions = () => {
                           ${modalData.amount}
                         </p>
                       </div>
+
                       <div className="flex items-center justify-between mb-4">
                         <p className="text-black text-lg font-semibold">Date</p>
                         <p className="font-medium text-lg ">
-                          {modalData.created_at.slice(0, 10)}
+                          {new Date(modalData.created_at).toLocaleString()}
                         </p>
                       </div>
 
