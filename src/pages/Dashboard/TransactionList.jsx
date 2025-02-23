@@ -12,6 +12,8 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { RefreshCw } from "lucide-react";
 
 const TransactionList = () => {
   const [modalData, setModalData] = useState(null);
@@ -24,6 +26,11 @@ const TransactionList = () => {
     setModalData(transaction);
   };
 
+  const handleRecheck = () => {
+    console.log("Rechecking...");
+    // Add your recheck logic here
+  };
+
   const navigate = useNavigate();
 
   const fetchTransactions = async () => {
@@ -34,11 +41,14 @@ const TransactionList = () => {
     //   return;
     // }
     try {
-      const response = await fetch("https://web-production-bcc7.up.railway.app/api/transactions/", {
-        headers: {
-          Authorization: `Bearer ${access}`,
-        },
-      });
+      const response = await fetch(
+        "https://web-production-bcc7.up.railway.app/api/transactions/",
+        {
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -213,19 +223,20 @@ const TransactionList = () => {
 
                       {modalData.type === "Deposit" &&
                       modalData.status === "Pending" ? (
-                        <div>
-                          <div className="flex items-center justify-between mb-4"></div>
-                          <p className="text-primary-800 text-lg font-semibold  text-center rounded-full bg-red-500 text-white border-red-500 border">
-                            Recheck
-                          </p>
-                        </div>
+                        <Button
+                          onClick={handleRecheck}
+                          className="w-full rounded-full bg-red-500 border border-red-500 text-white  flex items-center space-x-2 px-4  text-sm sm:text-base my-2 py-5"
+                        >
+                          <RefreshCw className="h-4 w-4 sm:h-5 sm:w-5" />
+                          <span>Recheck</span>
+                        </Button>
                       ) : null}
                     </>
                   )}
                 </DrawerDescription>
                 <DrawerFooter className="border-t pt-4">
                   <DrawerClose>
-                    <button className="w-full bg-green-600 text-white py-4 rounded-lg hover:bg-primary-700 transition">
+                    <button className="w-full bg-gray-500 text-white py-2 rounded-lg hover:bg-primary-700 transition">
                       Close
                     </button>
                   </DrawerClose>
