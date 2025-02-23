@@ -13,13 +13,13 @@ import {
 } from "@/components/ui/drawer";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { RefreshCw } from "lucide-react";
+import { ArrowDownToLine, ArrowUpFromLine, RefreshCw } from "lucide-react";
 
 const TransactionList = () => {
   const [modalData, setModalData] = useState(null);
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [filter, setFilter] = useState("all");
   console.log(transactions);
 
   const OpenDrawer = (transaction) => {
@@ -41,14 +41,11 @@ const TransactionList = () => {
     //   return;
     // }
     try {
-      const response = await fetch(
-        "https://web-production-bcc7.up.railway.app/api/transactions/",
-        {
-          headers: {
-            Authorization: `Bearer ${access}`,
-          },
-        }
-      );
+      const response = await fetch("ttps://web-production-bcc7.up.railway.app/api/transactions/", {
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+      });
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -64,6 +61,23 @@ const TransactionList = () => {
   useEffect(() => {
     fetchTransactions();
   }, []);
+
+  const filteredTransactions = transactions.filter(
+    (transaction) =>
+      filter === "all" ||
+      transaction.type.toLowerCase() === filter.toLowerCase()
+  );
+
+  const getTransactionIcon = (type) => {
+    switch (type) {
+      case "deposit":
+        return <ArrowDownToLine className="h-4 w-4" />;
+      case "Payout":
+        return <ArrowUpFromLine className="h-4 w-4" />;
+      case "swap":
+        return <RefreshCw className="h-4 w-4" />;
+    }
+  };
 
   const renderSkeleton = () => (
     <div className="flex items-center justify-between p-3 border border-primary-100 rounded-xl">
@@ -85,6 +99,43 @@ const TransactionList = () => {
       <Header />
 
       <main className="px-4 pt-20 pb-24">
+        <div className="mb-8">
+          <h1 className="text-2xl font-semibold mb-4 text-black">
+            Transaction History
+          </h1>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant={filter === "all" ? "default" : "outline"}
+              onClick={() => setFilter("all")}
+            >
+              All Transactions
+            </Button>
+            <Button
+              variant={filter === "deposit" ? "default" : "outline"}
+              onClick={() => setFilter("deposit")}
+              className="flex items-center gap-2"
+            >
+              <ArrowDownToLine className="h-4 w-4" />
+              Deposits
+            </Button>
+            <Button
+              variant={filter === "Payout" ? "default" : "outline"}
+              onClick={() => setFilter("Payout")}
+              className="flex items-center gap-2"
+            >
+              <ArrowUpFromLine className="h-4 w-4" />
+              Withdrawals
+            </Button>
+            <Button
+              variant={filter === "swap" ? "default" : "outline"}
+              onClick={() => setFilter("swap")}
+              className="flex items-center gap-2"
+            >
+              <RefreshCw className="h-4 w-4" />
+              Swaps
+            </Button>
+          </div>
+        </div>
         <section className="mb-8">
           <div className="space-y-4">
             <Drawer>
@@ -93,10 +144,10 @@ const TransactionList = () => {
                 Array(5)
                   .fill()
                   .map((_, index) => <div key={index}>{renderSkeleton()}</div>)
-              ) : transactions.length === 0 ? (
+              ) : filteredTransactions.length === 0 ? (
                 <p>No transactions available</p>
               ) : (
-                transactions.map((transaction) => (
+                filteredTransactions.map((transaction) => (
                   <DrawerTrigger
                     key={transaction.transaction_id}
                     className="w-full"
