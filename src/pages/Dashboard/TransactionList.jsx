@@ -41,7 +41,7 @@ const TransactionList = () => {
     //   return;
     // }
     try {
-      const response = await fetch("https://web-production-bcc7.up.railway.app/api/transactions/", {
+      const response = await fetch("/api/transactions/", {
         headers: {
           Authorization: `Bearer ${access}`,
         },
@@ -194,10 +194,11 @@ const TransactionList = () => {
                         className={`${
                           transaction.type === "Deposit"
                             ? "text-green-600"
-                            : transaction.type === "Payout" ||
-                              transaction.type === "Swap"
+                            : transaction.type === "Payout"
                             ? "text-red-500"
-                            : "text-yellow-500"
+                            : transaction.type === "Swap"
+                            ? "text-yellow-500"
+                            : null
                         } font-medium`}
                       >
                         {transaction.type === "Payout" ||
@@ -222,10 +223,10 @@ const TransactionList = () => {
                     <>
                       <div className="flex items-center justify-between mb-4">
                         <p className="text-primary-800 text-lg font-semibold ">
-                          Transaction ID
+                          From
                         </p>
                         <p className="font-medium text-lg">
-                          {modalData.transaction_id}
+                          {modalData.phone_number}
                         </p>
                       </div>
                       <div className="flex items-center justify-between mb-4">
@@ -247,7 +248,7 @@ const TransactionList = () => {
                           Date
                         </p>
                         <p className="font-medium text-lg ">
-                          {new Date(modalData.created_at).toLocaleDateString()}
+                          {new Date(modalData.created_at).toLocaleString()}
                         </p>
                       </div>
 
