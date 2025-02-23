@@ -41,7 +41,7 @@ const TransactionList = () => {
     //   return;
     // }
     try {
-      const response = await fetch("ttps://web-production-bcc7.up.railway.app/api/transactions/", {
+      const response = await fetch("https://web-production-bcc7.up.railway.app/api/transactions/", {
         headers: {
           Authorization: `Bearer ${access}`,
         },
