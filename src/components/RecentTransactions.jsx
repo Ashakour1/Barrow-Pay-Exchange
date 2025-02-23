@@ -110,10 +110,10 @@ const RecentTransactions = () => {
                     />
 
                     <div>
-                      <p className="font-medium text-green-800">
+                      <p className="font-medium text-start text-green-800">
                         {transaction.type}
                       </p>
-                      <p className="text-xs text-green-500">
+                      <p className="text-xs text-start text-gray-300">
                         {transaction.created_at.slice(0, 10)}
                       </p>
                     </div>
@@ -121,6 +121,10 @@ const RecentTransactions = () => {
                   <span className={`${transaction.color} font-medium`}>
                     {transaction.type === "Payout" ? (
                       <span className="text-red-500">
+                        -${Math.abs(transaction.amount).toFixed(2)}
+                      </span>
+                    ) : transaction.type === "Swap" ? (
+                      <span className="text-yellow-500">
                         -${Math.abs(transaction.amount).toFixed(2)}
                       </span>
                     ) : (
@@ -143,7 +147,7 @@ const RecentTransactions = () => {
                   {modalData && (
                     <>
                       <div className="flex items-center justify-between mb-4">
-                        <p className="text-green-800 text-lg font-semibold ">
+                        <p className="text-black text-lg font-semibold ">
                           Transaction ID
                         </p>
                         <p className="font-medium text-lg">
@@ -151,13 +155,11 @@ const RecentTransactions = () => {
                         </p>
                       </div>
                       <div className="flex items-center justify-between mb-4">
-                        <p className="text-green-800 text-lg font-semibold">
-                          Type
-                        </p>
+                        <p className="text-black text-lg font-semibold">Type</p>
                         <p className="font-medium text-lg ">{modalData.type}</p>
                       </div>
                       <div className="flex items-center justify-between mb-4">
-                        <p className="text-green-800 text-lg font-semibold">
+                        <p className="text-black text-lg font-semibold">
                           Amount
                         </p>
                         <p className="font-medium text-lg">
@@ -165,16 +167,14 @@ const RecentTransactions = () => {
                         </p>
                       </div>
                       <div className="flex items-center justify-between mb-4">
-                        <p className="text-green-800 text-lg font-semibold">
-                          Date
-                        </p>
+                        <p className="text-black text-lg font-semibold">Date</p>
                         <p className="font-medium text-lg ">
                           {modalData.created_at.slice(0, 10)}
                         </p>
                       </div>
 
                       <div className="flex items-center justify-between mb-4">
-                        <p className="text-green-800 text-lg font-semibold">
+                        <p className="text-black text-lg font-semibold">
                           Status
                         </p>
                         <p className="text-lg font-semibold">
