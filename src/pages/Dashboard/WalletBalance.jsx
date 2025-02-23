@@ -44,15 +44,12 @@ const WalletBalance = () => {
     const userData = JSON.parse(localStorage.getItem("userData"));
     const access = userData.access;
     try {
-      const response = await fetch(
-        "https://web-production-bcc7.up.railway.app/api/balance/",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${access}`,
-          },
-        }
-      );
+      const response = await fetch("https://web-production-bcc7.up.railway.app/api/balance/", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+      });
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -71,15 +68,12 @@ const WalletBalance = () => {
     const userData = JSON.parse(localStorage.getItem("userData"));
     const access = userData.access;
     try {
-      const response = await fetch(
-        "https://web-production-bcc7.up.railway.app/api/pending-payments/",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${access}`,
-          },
-        }
-      );
+      const response = await fetch("https://web-production-bcc7.up.railway.app/api/pending-payments/", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+      });
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -146,17 +140,14 @@ const WalletBalance = () => {
     const access = userData.access;
 
     try {
-      const response = await fetch(
-        "https://web-production-bcc7.up.railway.app/api/deposit/",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${access}`,
-          },
-          body: JSON.stringify(depositData),
-        }
-      );
+      const response = await fetch("https://web-production-bcc7.up.railway.app/api/deposit/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access}`,
+        },
+        body: JSON.stringify(depositData),
+      });
 
       const responseData = await response.json();
 
@@ -207,17 +198,14 @@ const WalletBalance = () => {
     };
 
     try {
-      const response = await fetch(
-        "https://web-production-bcc7.up.railway.app/api/payout/",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${access}`,
-          },
-          body: JSON.stringify(withdrawData),
-        }
-      );
+      const response = await fetch("https://web-production-bcc7.up.railway.app/api/payout/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access}`,
+        },
+        body: JSON.stringify(withdrawData),
+      });
 
       if (response.ok) {
         // Close the drawer
@@ -355,7 +343,7 @@ const WalletBalance = () => {
 
           <div className="grid grid-cols-2 gap-4">
             <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 text-black dark:from-emerald-950/40 dark:to-teal-950/40 p-4 border border-emerald-100/50 dark:border-emerald-800/50">
-              <div className="relative z-10">
+              <div className="relative ">
                 <Lock className="w-4 h-4 mb-3 text-emerald-600 dark:text-emerald-400" />
                 <div className="text-xl font-semibold">
                   ${pendingBalance?.total_pending_balance ?? "0.0"}
@@ -368,7 +356,7 @@ const WalletBalance = () => {
             </div>
 
             <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 text-black dark:from-blue-950/40 dark:to-indigo-950/40 p-4 border border-blue-100/50 dark:border-blue-800/50">
-              <div className="relative z-10">
+              <div className="relative ">
                 <CircleDollarSign className="w-4 h-4 mb-3 text-blue-600 dark:text-blue-400" />
                 <div className="text-xl font-semibold">
                   ${balance?.evcplus.toFixed(2) ?? "0.0"}
