@@ -55,7 +55,7 @@ const RecentTransactions = () => {
     // }
 
     try {
-      const response = await fetch("/api/transactions/", {
+      const response = await fetch("https://web-production-bcc7.up.railway.app/api/transactions/", {
         headers: {
           Authorization: `Bearer ${access}`,
         },
