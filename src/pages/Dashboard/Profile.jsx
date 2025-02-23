@@ -44,11 +44,14 @@ export default function ProfilePage() {
     }
 
     try {
-      const response = await fetch("https://web-production-bcc7.up.railway.app/auth/users/me/", {
-        headers: {
-          Authorization: `Bearer ${access}`,
-        },
-      });
+      const response = await fetch(
+        "https://web-production-bcc7.up.railway.app/auth/users/me/",
+        {
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -75,11 +78,14 @@ export default function ProfilePage() {
         setTransactions(JSON.parse(cachedData));
         setIsLoading(false);
       } else {
-        const response = await fetch("https://web-production-bcc7.up.railway.app/api/transactions/", {
-          headers: {
-            Authorization: `Bearer ${access}`,
-          },
-        });
+        const response = await fetch(
+          "https://web-production-bcc7.up.railway.app/api/transactions/",
+          {
+            headers: {
+              Authorization: `Bearer ${access}`,
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -130,12 +136,12 @@ export default function ProfilePage() {
                       alt="User Avatar"
                     />
                     <AvatarFallback className="bg-green-500 text-5xl text-white">
-                      {user?.full_name?.charAt(0) || "JD"}
+                      {user?.full_name?.charAt(0,1)}
                     </AvatarFallback>
                   </Avatar>
                   <div className="text-center">
                     <h1 className="text-2xl text-green-500 font-bold">
-                      {user?.full_name || "John Doe"}
+                      {user?.full_name}
                     </h1>
                     <p className="text-muted-foreground">Verified</p>
                   </div>
