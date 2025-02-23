@@ -10,6 +10,9 @@ import Register from "./components/Register";
 import PrivateRoutes from "./routes/protectedRoutes";
 import { Toaster } from "react-hot-toast";
 import { FaWhatsapp } from "react-icons/fa";
+import Deposit from "./components/Deposit";
+import Withdraw from "./components/Withdraw";
+import Swap from "./components/Swap";
 
 function App() {
   return (
@@ -36,16 +39,34 @@ function App() {
               </>
             }
           />
-          <Route
-            path="/register"
-            element={<Register />}
-          />
+          <Route path="/register" element={<Register />} />
           <Route
             path="/profile"
             element={
+              <div className="min-h-screen flex flex-col">
+                <Header />
+                <div className="flex-grow">
+                  <Profile />
+                </div>
+                <Footer />
+                <Link
+                  to="https://wa.me/yourphonenumber"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="fixed bottom-18 right-6 bg-green-500 text-white p-4 rounded-full shadow-lg flex items-center justify-center"
+                >
+                  <FaWhatsapp className="w-8 h-8" />
+                </Link>
+              </div>
+            }
+          />
+
+          <Route
+            path="/deposit"
+            element={
               <>
                 <Header />
-                <Profile />
+                <Deposit />
                 <Footer />
                 <Link
                   to="https://wa.me/yourphonenumber"
@@ -58,6 +79,43 @@ function App() {
               </>
             }
           />
+          <Route
+            path="/withdraw"
+            element={
+              <>
+                <Header />
+                <Withdraw />
+                <Footer />
+                <Link
+                  to="https://wa.me/yourphonenumber"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="fixed bottom-18 right-6 bg-green-500 text-white p-4 rounded-full shadow-lg flex items-center justify-center"
+                >
+                  <FaWhatsapp className="w-8 h-8" />
+                </Link>
+              </>
+            }
+          />
+          <Route
+            path="/swap"
+            element={
+              <>
+                <Header />
+                <Swap />
+                <Footer />
+                <Link
+                  to="https://wa.me/yourphonenumber"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="fixed bottom-18 right-6 bg-green-500 text-white p-4 rounded-full shadow-lg flex items-center justify-center"
+                >
+                  <FaWhatsapp className="w-8 h-8" />
+                </Link>
+              </>
+            }
+          />
+
           <Route
             path="/transactions"
             element={
