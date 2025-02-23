@@ -110,12 +110,14 @@ const TransactionList = () => {
                         </div>
                         <div>
                           <p
-                            className={`font-medium text-primary-800 ${
+                            className={`font-medium text-start text-primary-800 ${
                               transaction.type === "Deposit"
-                                ? "text-green-500"
-                                : transaction.type === "Payout" || transaction.type === "Swap"
+                                ? "text-green-600"
+                                : transaction.type === "Payout"
                                 ? "text-red-500"
-                                : "text-yellow-500"
+                                : transaction.type === "Swap"
+                                ? "text-yellow-500"
+                                : null
                             }`}
                           >
                             {transaction.type}
@@ -131,12 +133,14 @@ const TransactionList = () => {
                         className={`${
                           transaction.type === "Deposit"
                             ? "text-green-600"
-                            : transaction.type === "Payout" || transaction.type === "Swap"
+                            : transaction.type === "Payout" ||
+                              transaction.type === "Swap"
                             ? "text-red-500"
                             : "text-yellow-500"
                         } font-medium`}
                       >
-                        {transaction.type === "Payout" || transaction.type === "Swap"
+                        {transaction.type === "Payout" ||
+                        transaction.type === "Swap"
                           ? `-$${transaction.amount.toFixed(2)}`
                           : `+$${transaction.amount.toFixed(2)}`}
                       </span>
